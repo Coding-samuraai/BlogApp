@@ -13,7 +13,7 @@ function Home() {
   async function fetchPosts() {
     try {
       const data = await service.getPosts();
-      if (data) setPosts(data.documents);
+      if (data) setPosts(data.rows);
     } catch (error) {
       console.log("Error in Fetching records :", error);
     }

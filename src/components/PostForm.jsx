@@ -33,7 +33,8 @@ function PostForm({ post }) {
 
         dbPost = await service.updatePost(post.$id, {
           ...data,
-          featuredImage: file ? file.$id : post.$id,
+          userId: userData.$id,
+          featuredImage: file ? file.$id : post.featuredImage,
         });
       } else {
         const file = data?.image[0]
@@ -42,7 +43,7 @@ function PostForm({ post }) {
 
         dbPost = await service.createPost({
           featuredImage: file?.$id,
-          userID: userData.$id,
+          userId: userData.$id,
           ...data,
         });
       }

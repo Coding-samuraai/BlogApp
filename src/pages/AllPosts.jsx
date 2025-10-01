@@ -9,7 +9,7 @@ function AllPosts() {
   async function fetchPosts() {
     try {
       const data = await service.getPosts();
-      setPosts(data.documents);
+      setPosts(data.rows);
     } catch (error) {
       console.log("Error in Fetching records :", error);
     } finally {

@@ -1,50 +1,52 @@
 import conf from "../conf/conf";
-import { Client, Databases, Storage, Query, ID } from "appwrite";
+import { Client, TablesDB, Storage, Query, ID } from "appwrite";
 
 export class Service {
   client = new Client();
-  databases;
+  tablesDB;
   bucket;
 
   constructor() {
     this.client.setEndpoint(conf.appURL).setProject(conf.appProjectId);
-    this.databases = new Databases(this.client);
+    this.tablesDB = new TablesDB(this.client);
     this.bucket = new Storage(this.client);
   }
 
-  async createPost({ title, slug, content, featuredImage, status, userID }) {
+  async createPost({ title, slug, content, featuredImage, status, userId }) {
     try {
-      return await this.databases.createDocument(
-        conf.appDatabaseId,
-        conf.appCollectionId,
-        slug, // document ID
-        {
+      return await this.tablesDB.createRow({
+        databaseId: conf.appDatabaseId,
+        tableId: conf.appTableId,
+        rowId: slug, // document ID
+        data: {
           title,
           slug,
           content,
           featuredImage,
           status,
-          userID,
-        }
-      );
+          userId,
+        },
+      });
     } catch (error) {
       console.log("Error creating post:", error);
     }
   }
 
-  async updatePost(slug, { title, content, featuredImage, status }) {
+  async updatePost(slug, { title, content, featuredImage, status, userId }) {
     try {
-      return await this.databases.updateDocument(
-        conf.appDatabaseId,
-        conf.appCollectionId,
-        slug,
-        {
+      return await this.tablesDB.upsertRow({
+        databaseId: conf.appDatabaseId,
+        tableId: conf.appTableId,
+        rowId: slug, // document ID
+        data: {
           title,
-          content,
+          slug,
           featuredImage,
           status,
-        }
-      );
+          content,
+          userId,
+        },
+      });
     } catch (error) {
       console.log("Error updating post:", error);
     }
@@ -52,11 +54,11 @@ export class Service {
 
   async deletePost(slug) {
     try {
-      return await this.databases.deleteDocument(
-        conf.appDatabaseId,
-        conf.appCollectionId,
-        slug
-      );
+      return await this.tablesDB.deleteRow({
+        databaseId: conf.appDatabaseId,
+        tableId: conf.appTableId,
+        rowId: slug, // document ID
+      });
     } catch (error) {
       console.log("Error deleting post:", error);
     }
@@ -64,11 +66,11 @@ export class Service {
 
   async getPost(slug) {
     try {
-      return await this.databases.getDocument(
-        conf.appDatabaseId,
-        conf.appCollectionId,
-        slug
-      );
+      return await this.tablesDB.getRow({
+        databaseId: conf.appDatabaseId,
+        tableId: conf.appTableId,
+        rowId: slug, // document ID
+      });
     } catch (error) {
       console.log("Error fetching posts:", error);
     }
@@ -76,11 +78,11 @@ export class Service {
 
   async getPosts(queries = [Query.equal("status", "active")]) {
     try {
-      return this.databases.listDocuments(
-        conf.appDatabaseId,
-        conf.appCollectionId,
-        queries
-      );
+      return this.tablesDB.listRows({
+        databaseId: conf.appDatabaseId,
+        tableId: conf.appTableId,
+        queries: queries,
+      });
     } catch (error) {
       console.log("Error fetching posts:", error);
     }
@@ -88,7 +90,11 @@ export class Service {
 
   async uploadFile(file) {
     try {
-      return await this.bucket.createFile(conf.appBucketId, ID.unique(), file);
+      return await this.bucket.createFile({
+        bucketId: conf.appBucketId,
+        fileId: ID.unique(),
+        file: file,
+      });
     } catch (error) {
       console.log("Error uploading file:", error);
     }
@@ -96,7 +102,10 @@ export class Service {
 
   async deleteFile(fileId) {
     try {
-      return await this.bucket.deleteFile(conf.appBucketId, fileId);
+      return await this.bucket.deleteFile({
+        bucketId: conf.appBucketId,
+        fileId: fileId,
+      });
     } catch (error) {
       console.log("Error deleting file:", error);
     }
@@ -104,7 +113,10 @@ export class Service {
 
   getFilePreview(fileId) {
     try {
-      const previewFile = this.bucket.getFilePreview(conf.appBucketId, fileId);
+      const previewFile = this.bucket.getFilePreview({
+        bucketId: conf.appBucketId,
+        fileId: fileId,
+      });
       return previewFile;
     } catch (error) {
       console.log("Error fetching file preview:", error);
@@ -113,7 +125,10 @@ export class Service {
 
   getFileView(fileId) {
     try {
-      const file = this.bucket.getFileView(conf.appBucketId, fileId);
+      const file = this.bucket.getFileView({
+        bucketId: conf.appBucketId,
+        fileId: fileId,
+      });
       return file;
     } catch (error) {
       console.log("Error fetching file view:", error);
