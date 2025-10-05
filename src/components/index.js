@@ -12,6 +12,7 @@ import Login from "./Login";
 import PostForm from "./PostForm";
 import PostCard from "./PostCard";
 import AuthLayout from "./AuthLayout";
+import Avtr from "./Header/Avtr";
 export {
   Header,
   Footer,
@@ -26,5 +27,6 @@ export {
   Login,
   PostForm,
   PostCard,
-  AuthLayout, 
+  AuthLayout,
+  Avtr,
 };

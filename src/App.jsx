@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { login, logout } from "./store/authSlice";
 import { Outlet } from "react-router-dom";
 import { Header, Footer } from "./components/index";
+import { ClipLoader } from "react-spinners";
 function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -28,16 +29,16 @@ function App() {
   }
 
   return loading ? (
-    <div>loading...</div>
+    <div className="h-screen w-screen flex justify-center items-center bg-gray-400">
+      <ClipLoader size={40} color="black" />
+    </div>
   ) : (
-    <div className="h-screen w-screen flex justify-center bg-gray-400">
-      <div className="h-full w-full flex-col justify-between block ">
-        <Header />
-        <main>
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
+    <div className="min-h-screen w-full flex flex-col justify-between bg-gray-400">
+      <Header />
+      <main>
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   );
 }

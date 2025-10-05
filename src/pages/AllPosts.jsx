@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, PostCard } from "../components";
 import service from "../appwrite/config";
+import { ClipLoader } from "react-spinners";
 
 function AllPosts() {
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,9 @@ function AllPosts() {
   return (
     <>
       {loading ? (
-        <h1>loading.....</h1>
+        <div className="flex justify-center items-center h-[70vh]">
+          <ClipLoader size={40} color="black" />
+        </div>
       ) : (
         <div className="w-full py-8">
           <Container>

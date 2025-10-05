@@ -111,6 +111,33 @@ export class Service {
     }
   }
 
+  async saveUserPreferences({ userId, preferences }) {
+    try {
+      return await this.tablesDB.createRow({
+        databaseId: conf.appDatabaseId,
+        tableId: conf.appUserPrefTableId,
+        rowId: userId, // document ID
+        data: {
+          ...preferences,
+        },
+      });
+    } catch (error) {
+      console.log("Error saving user preferences:", error);
+    }
+  }
+
+  async getUserPreferences(userId) {
+    try {
+      return await this.tablesDB.getRow({
+        databaseId: conf.appDatabaseId,
+        tableId: conf.appUserPrefTableId,
+        rowId: userId, // document ID
+      });
+    } catch (error) {
+      console.log("Error fetching user preferences:", error);
+    }
+  }
+
   getFilePreview(fileId) {
     try {
       const previewFile = this.bucket.getFilePreview({

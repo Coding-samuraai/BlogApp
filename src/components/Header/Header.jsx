@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Container, Logo, LogoutBtn } from "../index";
+import { Avtr, Container, Logo } from "../index";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -43,7 +43,7 @@ function Header() {
     <header className="py-3 shadow bg-gray-500 w-full">
       <Container>
         <nav className="flex">
-          <div className="mr-4">
+          <div className="mr-4 flex items-center">
             <Link to="/">
               <Logo width="70px" />
             </Link>
@@ -69,7 +69,8 @@ function Header() {
             })}
             {authStatus && (
               <li>
-                <LogoutBtn />
+                {/* <LogoutBtn /> */}
+                <Avtr />
               </li>
             )}
           </ul>

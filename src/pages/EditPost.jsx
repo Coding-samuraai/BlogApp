@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Container, PostForm } from "../components";
 import service from "../appwrite/config";
 import { useNavigate, useParams } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 function EditPost() {
   const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [postLoading, setPostLoading] = useState(true);
   const { slug } = useParams();
   const navigate = useNavigate();
 
   async function fetchPost() {
     try {
       const data = await service.getPost(slug);
-      setLoading(false);
+      setPostLoading(false);
 
       if (data) setPost(data);
       else navigate("/");
@@ -26,8 +27,10 @@ function EditPost() {
 
   return (
     <div>
-      {loading ? (
-        <h1>Loading...</h1>
+      {postLoading ? (
+        <div className="flex justify-center items-center h-[70vh]">
+          <ClipLoader size={40} color="black" />
+        </div>
       ) : (
         <div className="py-8">
           <Container>

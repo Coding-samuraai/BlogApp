@@ -1,4 +1,5 @@
 import React from "react";
+import { ClipLoader } from "react-spinners";
 
 function Button({
   children,
@@ -6,16 +7,28 @@ function Button({
   bgColor = "bg-blue-600",
   textColor = "text-white",
   className = "",
+  isLoading = false,
   ...props
 }) {
   return (
-    <button
-      className={`px-4 py-2 rounded ${bgColor} ${textColor} ${className}`}
-      type={type}
-      {...props}
-    >
-      {children}
-    </button>
+    <>
+      {isLoading ? (
+        <div className="flex justify-center items-center">
+          <ClipLoader
+            size={20}
+            color="black"
+          />
+        </div>
+      ) : (
+        <button
+          className={`px-4 py-2 rounded ${bgColor} ${textColor} ${className}`}
+          type={type}
+          {...props}
+        >
+          {children}
+        </button>
+      )}
+    </>
   );
 }
 

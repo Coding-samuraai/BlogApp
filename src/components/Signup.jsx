@@ -6,18 +6,48 @@ import authService from "../appwrite/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../store/authSlice";
 import { Logo } from "../components/index";
+import { generateRandomColor } from "../helpers/ColorHelper";
+import service from "../appwrite/config";
 
 function Signup() {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   async function signup(data) {
     setError("");
     try {
+      setLoading(true);
+      // Create user account
       const userData = await authService.createAccount(data);
 
       if (userData) {
+        // Generate a random color for the user avatar
+        let color = generateRandomColor();
+
+        // Store user preference in a separate table
+        const preferences = { avatarColor: color };
+
+        // Automatically log in the user after successful signup
+        const session = await authService.login(data);
+
+        // Save preferences to the database
+        const result = await service.saveUserPreferences({
+          userId: userData.$id,
+          preferences,
+        });
+        // Check if saving preferences was successful
+        if (!result) {
+          console.error("Failed to save user preferences");
+        }
+
+        // Check if login was successful
+        if (!session) {
+          setError("Login failed after signup. Please try logging in.");
+          return;
+        }
+
         dispatch(
           login({
             userData,
@@ -28,6 +58,8 @@ function Signup() {
     } catch (error) {
       console.error("Signup error:", error);
       setError("Failed to create account. Please check your details.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -81,7 +113,7 @@ function Signup() {
                 required: true,
               })}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" isLoading={loading}>
               Create Account
             </Button>
           </div>

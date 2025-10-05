@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Input, Select, RTE } from "./index";
 import service from "../appwrite/config";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function PostForm({ post }) {
+  const [loading, setLoading] = useState(false);
   const { handleSubmit, register, control, watch, setValue, getValues } =
     useForm({
       defaultValues: {
@@ -23,6 +24,7 @@ function PostForm({ post }) {
 
   async function submit(data) {
     try {
+      setLoading(true);
       let dbPost = null;
       if (post) {
         const file = data.image[0]
@@ -50,6 +52,8 @@ function PostForm({ post }) {
       if (dbPost) navigate(`/post/${dbPost.$id}`);
     } catch (error) {
       console.log("PostForm Error : ", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -126,6 +130,7 @@ function PostForm({ post }) {
           type="submit"
           bgColor={post ? "bg-green-500" : undefined}
           className="w-full"
+          isLoading={loading}
         >
           {post ? "Update" : "Submit"}
         </Button>

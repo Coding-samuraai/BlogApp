@@ -7,6 +7,7 @@ import authService from "../appwrite/auth";
 import { useForm } from "react-hook-form";
 
 function Login() {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
@@ -15,6 +16,7 @@ function Login() {
 
   async function handleLogin(data) {
     try {
+      setLoading(true);
       const session = await authService.login(data);
       if (session) {
         const user = await authService.getCurrentUser();
@@ -24,6 +26,8 @@ function Login() {
     } catch (error) {
       console.error("Login error:", error);
       setError("Failed to login. Please check your credentials.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -65,7 +69,7 @@ function Login() {
               placeholder="Enter your password"
               {...register("password", { required: true })}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" isLoading={loading}>
               Sign In
             </Button>
           </div>

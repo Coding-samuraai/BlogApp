@@ -3,33 +3,48 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import appwriteService from "../appwrite/config";
 import { Button, Container } from "../components";
 import parse from "html-react-parser";
+import { ClipLoader } from "react-spinners";
 import { useSelector } from "react-redux";
 
 export default function Post() {
   const [post, setPost] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const { slug } = useParams();
   const navigate = useNavigate();
 
   const userData = useSelector((state) => state.auth.userData);
 
-  const isAuthor = post ? (post.userId === userData.$id ? true : false) : false;
+  const isAuthor = post ? (post.userId === userData?.$id ? true : false) : false;
 
   useEffect(() => {
-    if (slug) {
-      appwriteService.getPost(slug).then((post) => {
-        if (post) setPost(post);
-        else navigate("/");
-      });
-    } else navigate("/");
+    try {
+      if (slug) {
+        appwriteService.getPost(slug).then((post) => {
+          if (post) setPost(post);
+          else navigate("/");
+        });
+      } else navigate("/");
+    } catch (error) {
+      console.log("Error in fetching post : ", error);
+    }
   }, [slug, navigate]);
 
   const deletePost = () => {
-    appwriteService.deletePost(post.$id).then((status) => {
-      if (status) {
-        appwriteService.deleteFile(post.featuredImage);
-        navigate("/");
-      }
-    });
+    try {
+      console.log("Delete Post");
+
+      setDeleteLoading(true);
+      appwriteService.deletePost(post.$id).then((status) => {
+        if (status) {
+          appwriteService.deleteFile(post.featuredImage);
+          navigate("/");
+        }
+      });
+    } catch (error) {
+      console.log("Error in deleting post : ", error);
+    } finally {
+      setDeleteLoading(false);
+    }
   };
 
   return post ? (
@@ -43,13 +58,21 @@ export default function Post() {
           />
 
           {isAuthor && (
-            <div className="absolute right-6 top-6">
+            <div className="absolute right-6 top-6 flex">
               <Link to={`/edit-post/${post.$id}`}>
-                <Button bgColor="bg-green-500" className="mr-3">
+                <Button
+                  bgColor="bg-green-500"
+                  className="mr-3 hover:bg-green-600"
+                >
                   Edit
                 </Button>
               </Link>
-              <Button bgColor="bg-red-500" onClick={deletePost}>
+              <Button
+                bgColor="bg-red-500"
+                className="hover:bg-red-600"
+                onClick={deletePost}
+                isLoading={deleteLoading}
+              >
                 Delete
               </Button>
             </div>
@@ -61,5 +84,9 @@ export default function Post() {
         <div className="browser-css">{parse(post.content)}</div>
       </Container>
     </div>
-  ) : null;
+  ) : (
+    <div className="flex justify-center items-center h-[70vh]">
+      <ClipLoader size={40} color="black" />
+    </div>
+  );
 }
