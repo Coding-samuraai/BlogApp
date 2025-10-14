@@ -32,7 +32,7 @@ export class AuthService {
   async verifyEmail() {
     try {
       const verification = await this.account.createVerification({
-        url: "http://localhost:5173/verify",
+        url: `${conf.baseURL}/verify`,
       });
     } catch (error) {
       console.error("Error in verifying email:", error);
