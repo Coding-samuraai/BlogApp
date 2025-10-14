@@ -30,6 +30,8 @@ export class AuthService {
   }
 
   async verifyEmail() {
+    console.log(`${conf.baseURL}/verify`);
+
     try {
       const verification = await this.account.createVerification({
         url: `${conf.baseURL}/verify`,
