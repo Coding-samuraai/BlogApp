@@ -1,8 +1,7 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
-export default function Protected({ children }) {
+export const UnverifiedRoute = ({ children }) => {
   const authState = useSelector((state) => state.auth);
 
   const status = authState.status;
@@ -11,14 +10,16 @@ export default function Protected({ children }) {
   return (
     <>
       {status ? (
-        emailVerification ? (
+        !emailVerification ? (
           children
         ) : (
-          <Navigate to="/email-verification" />
+          <Navigate to="/" />
         )
       ) : (
         <Navigate to="/login" />
       )}
     </>
   );
-}
+};
+
+export default UnverifiedRoute;

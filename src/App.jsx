@@ -10,7 +10,7 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     checkUserAuthentication();
-  }, []);
+  }, [dispatch]);
 
   async function checkUserAuthentication() {
     try {

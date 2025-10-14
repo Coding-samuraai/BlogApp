@@ -53,6 +53,7 @@ function Signup() {
             userData,
           })
         );
+
         navigate("/");
       }
     } catch (error) {

@@ -28,6 +28,30 @@ export class AuthService {
       throw error;
     }
   }
+
+  async verifyEmail() {
+    try {
+      const verification = await this.account.createVerification({
+        url: "http://localhost:5173/verify",
+      });
+    } catch (error) {
+      console.error("Error in verifying email:", error);
+      throw error;
+    }
+  }
+
+  async updateVerification({ userId, secret }) {
+    try {
+      const verification = await this.account.updateVerification({
+        userId,
+        secret,
+      });
+      return verification;
+    } catch (error) {
+      console.error("Error in updating verification:", error);
+      throw error;
+    }
+  }
   async login({ email, password }) {
     try {
       const session = await this.account.createEmailPasswordSession({

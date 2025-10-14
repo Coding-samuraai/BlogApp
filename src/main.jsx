@@ -4,7 +4,7 @@ import App from "./App.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AuthLayout } from "./components/index.js";
+import { AuthLayout, UnverifiedRoute } from "./components/index.js";
 import AddPost from "./pages/AddPost.jsx";
 import AllPosts from "./pages/AllPosts.jsx";
 import EditPost from "./pages/EditPost.jsx";
@@ -13,6 +13,8 @@ import Login from "./pages/Login.jsx";
 import Post from "./pages/Post.jsx";
 import Signup from "./pages/Signup.jsx";
 import MyPosts from "./pages/MyPosts.jsx";
+import EmailVerification from "./pages/EmailVerification.jsx";
+import Verify from "./pages/Verify.jsx";
 
 const router = createBrowserRouter([
   {
@@ -20,29 +22,41 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
-        element: <Home />,
+        path: "/login",
+        element: <Login />,
       },
       {
-        path: "/login",
+        path: "/signup",
+        element: <Signup />,
+      },
+      {
+        path: "/",
         element: (
-          <AuthLayout authentication={false}>
-            <Login />
+          <AuthLayout>
+            <Home />,
           </AuthLayout>
         ),
       },
       {
-        path: "/signup",
+        path: "/email-verification",
         element: (
-          <AuthLayout authentication={false}>
-            <Signup />
-          </AuthLayout>
+          <UnverifiedRoute>
+            <EmailVerification />,
+          </UnverifiedRoute>
+        ),
+      },
+      {
+        path: "/verify",
+        element: (
+          <UnverifiedRoute>
+            <Verify />
+          </UnverifiedRoute>
         ),
       },
       {
         path: "/all-posts",
         element: (
-          <AuthLayout authentication>
+          <AuthLayout>
             <AllPosts />
           </AuthLayout>
         ),
@@ -50,7 +64,7 @@ const router = createBrowserRouter([
       {
         path: "/add-post",
         element: (
-          <AuthLayout authentication>
+          <AuthLayout>
             <AddPost />
           </AuthLayout>
         ),
@@ -58,7 +72,7 @@ const router = createBrowserRouter([
       {
         path: "/edit-post/:slug",
         element: (
-          <AuthLayout authentication>
+          <AuthLayout>
             <EditPost />
           </AuthLayout>
         ),
@@ -70,7 +84,7 @@ const router = createBrowserRouter([
       {
         path: "/my-posts",
         element: (
-          <AuthLayout authentication>
+          <AuthLayout>
             <MyPosts />
           </AuthLayout>
         ),

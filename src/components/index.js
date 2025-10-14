@@ -13,6 +13,7 @@ import PostForm from "./PostForm";
 import PostCard from "./PostCard";
 import AuthLayout from "./AuthLayout";
 import Avtr from "./Header/Avtr";
+import UnverifiedRoute from "./UnverifiedRoute";
 export {
   Header,
   Footer,
@@ -29,4 +30,5 @@ export {
   PostCard,
   AuthLayout,
   Avtr,
+  UnverifiedRoute,
 };
