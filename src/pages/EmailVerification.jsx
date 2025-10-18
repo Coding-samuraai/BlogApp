@@ -1,23 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import authService from "../appwrite/auth";
 import { Logo } from "../components";
+import { set } from "react-hook-form";
 function EmailVerification() {
+  const [sent, setSent] = useState(false);
+  const [time, setTime] = useState(60);
+
   async function handleSendVerification() {
     try {
-    //   return;
+      //   return;
+      setSent(true);
       const token = await authService.verifyEmail();
+
+      const timeInterval = setInterval(() => {
+        setTime((prevTime) => {
+          if (prevTime > 0) {
+            return prevTime - 1;
+          } else {
+            clearInterval(timeInterval);
+            setSent(false);
+            return 0;
+          }
+        });
+      }, 1000);
     } catch (error) {
       console.error("Error sending verification email:", error);
-    } finally {
-      setLoading(false);
     }
   }
-
-  useEffect(() => {
-    console.log("Sending verification email...");
-
-    handleSendVerification();
-  }, []);
 
   return (
     <div className="flex items-center justify-center w-full">
@@ -31,8 +40,24 @@ function EmailVerification() {
           Verify it's you
         </h2>
         <p className="mt-2 text-center text-base text-black/60">
-          We have sent a verification link to your email. Please check your
-          inbox and click on the link to verify your email address and login.
+          We will send a verification link to your registered email address.
+          {sent ? (
+            <span className="font-semibold ml-1 text-green-600">
+              Verification email sent!
+              <span> Try again in : {time} seconds</span>
+            </span>
+          ) : (
+            <span
+              onClick={handleSendVerification}
+              className="font-semibold ml-1 cursor-pointer text-blue-600 hover:underline"
+            >
+              Click here to send.
+            </span>
+          )}
+        </p>
+        <p className="text-center text-base text-black/60">
+          Please check your email after clicking above and click on the
+          verification link to complete the process.
         </p>
       </div>
     </div>
