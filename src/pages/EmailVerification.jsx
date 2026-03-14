@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import authService from "../appwrite/auth";
 import { Logo } from "../components";
-import { set } from "react-hook-form";
 function EmailVerification() {
   const [sent, setSent] = useState(false);
   const [time, setTime] = useState(60);
