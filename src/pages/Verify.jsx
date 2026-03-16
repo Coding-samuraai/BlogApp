@@ -9,6 +9,8 @@ function Verify() {
   const secret = urlParams.get("secret");
   const userId = urlParams.get("userId");
 
+  console.log(secret, userId);
+
   async function verifyEmail() {
     try {
       if (userId && secret) {
@@ -31,9 +33,9 @@ function Verify() {
     <>
       {loading ? (
         <div className="h-screen w-screen flex justify-center items-center bg-gray-400">
-          <div 
-          className="absolute top-1/3 text-center mb-20 font-semibold text-lg"
-          >Verifing...</div>
+          <div className="absolute top-1/3 text-center mb-20 font-semibold text-lg">
+            Verifing...
+          </div>
           <ClipLoader size={40} color="black" />
         </div>
       ) : (
